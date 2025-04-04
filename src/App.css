@@ -109,6 +109,9 @@ body::after {
     gap: 0px;
     flex-direction: column;
   }
+  .button_wrap button::after {
+    display:none;
+  }
 
 }
 @media screen and (max-width:480px){
