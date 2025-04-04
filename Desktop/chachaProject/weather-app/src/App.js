@@ -1,0 +1,49 @@
+
+import {useEffect, useState} from "react"
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "./App.reset.css";
+import "./App.css";
+import WeatherBox from "./component/WeatherBox";
+import WeatherButton from "./component/WeatherButton.js";
+
+//01. 앱시 실행되자 마자 현재 위치 기반의 날씨가 보인다.
+//02. 날씨정보 > 도시, 섭씨, 화씨, 날씨 상태정보가 보인다. 
+//03. 5개의 버튼이 있다. (현재위치1개, 다른도시4개)
+//04. 도시버튼 클릭할 때 마다 도시별 날씨가 나온다
+//05. 현재위치 버튼을 누르면 다시 현재위치 기반의 날씨가 나온다. 
+//06. 데이터를 들오고는 동안 로딩 스피너가 돈다. 
+
+
+function App() {
+  const [weather, setWeather] = useState(null);
+  const getCurrentLocation = () => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      let lat = position.coords.latitude
+      let lon = position.coords.longitude
+      getWeatherByCurrentLocation(lat, lon)
+    });
+  };
+
+  const getWeatherByCurrentLocation = async(lat, lon) => {
+    let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=88d1e51eec39ded49b2dcfa04692b7f8&units=metric`
+    let response = await fetch(url)
+    let data = await response.json();
+    console.log("data", data);
+    setWeather(data);
+  }
+
+  useEffect(() => {
+    getCurrentLocation()
+  }, []);
+
+  return (
+    <div className="weather_container">
+      <div className="ch_inner">
+        <WeatherBox weather={weather}/>
+        <WeatherButton />
+      </div>
+    </div>
+  );
+}
+
+export default App;
